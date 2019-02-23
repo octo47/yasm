@@ -20,16 +20,19 @@ Feature provided by yasm:
 * Declarative transition definitions
 * Transition guards
 * Stateless and threadsafe _(**)_
+* Support for ANY actions _(***)_
 
 (*) _machine uses Action instead of Event as it overloaded term_
 
 (**) _as long as transition functions are thread safe as well
 
+(***) _useful to implement timeouts_
+
 Features not in (yet):
 * Verification
 
 
-## Example
+## Machine Transitions
 
 To give you some example of how it can be used here a simple class:
 
@@ -106,3 +109,20 @@ final Phone hangUp = stateMachine.transition(connected, new Phone.HungUp()).orEl
 ```
 
 (Optional used to express no state to transition was found)
+
+## ANY State
+
+ANY state can be used to define timeouts. 
+
+Consider following example:
+```
+ fromState(Phone.State.Connected)
+ ...
+                .permitIf(AnyAction.class, Phone.State.OffHook, isCallTooLong(clock, maxCall))
+ ...
+```
+
+For state Connected transition defined as _'Connected -> (ANY) OffHook: if(isCallTooLong)'_
+
+During transition analysis for any action this transition will happen if _isCallTooLong()_ happen to return _true_. To make a bit easier to handle this use case machine provides _loop()_ method that will trigger any 'ANY' transitions if appropriate guard will trigger.
+
