@@ -26,7 +26,7 @@ Feature provided by yasm:
 
 (**) _as long as transition functions are thread safe as well
 
-(***) _useful to implement timeouts_
+(***) _useful to implement timeouts_ https://github.com/octo47/yasm/blob/master/README.md#any-state
 
 Features not in (yet):
 * Verification
